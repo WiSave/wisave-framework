@@ -33,7 +33,17 @@ jobs:
             exit 0
           fi
 
-          tag="v0.1.${GITHUB_RUN_NUMBER}"
+          latest_tag="$(git tag -l 'v*' | sort -V | tail -n 1)"
+          latest_version="${latest_tag#v}"
+          if [ -z "$latest_tag" ] || [ "${latest_version%%.*}" -lt 1 ]; then
+            tag="v1.0.0"
+          else
+            major="$(echo "$latest_version" | cut -d. -f1)"
+            minor="$(echo "$latest_version" | cut -d. -f2)"
+            patch="$(echo "$latest_version" | cut -d. -f3)"
+            tag="v${major}.${minor}.$((patch + 1))"
+          fi
+
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git tag "$tag"
