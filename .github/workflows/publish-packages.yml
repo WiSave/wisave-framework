@@ -23,20 +23,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-
-      - name: Restore
-        run: dotnet restore WiSave.Framework.slnx
-
-      - name: Build
-        run: dotnet build WiSave.Framework.slnx -c Release --no-restore
-
-      - name: Test
-        run: dotnet test WiSave.Framework.slnx -c Release --no-build
-
       - name: Ensure release tag for this commit
         id: release_tag
         run: |
@@ -53,6 +39,20 @@ jobs:
           git tag "$tag"
           git push origin "$tag"
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore
+        run: dotnet restore WiSave.Framework.slnx
+
+      - name: Build
+        run: dotnet build WiSave.Framework.slnx -c Release --no-restore
+
+      - name: Test
+        run: dotnet test WiSave.Framework.slnx -c Release --no-build
 
       - name: Pack stable packages
         run: dotnet pack WiSave.Framework.slnx -c Release --no-build -o ./nupkg
