@@ -5,9 +5,14 @@
     <Description>Shared application-layer abstractions for WiSave services.</Description>
     <Authors>JacobChwastek</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/WiSave/wisave-framewrk</RepositoryUrl>
     <IsPackable>true</IsPackable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\WiSave.Framework.Domain\WiSave.Framework.Domain.csproj" />
