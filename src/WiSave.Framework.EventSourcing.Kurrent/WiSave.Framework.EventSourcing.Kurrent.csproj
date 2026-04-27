@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageId>WiSave.Framework.EventSourcing.Kurrent</PackageId>
+    <Description>KurrentDB event-sourcing infrastructure for WiSave services.</Description>
+    <Authors>JacobChwastek</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/WiSave/wisave-framewrk</RepositoryUrl>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WiSave.Framework.Application\WiSave.Framework.Application.csproj" />
+    <ProjectReference Include="..\WiSave.Framework.Domain\WiSave.Framework.Domain.csproj" />
+    <ProjectReference Include="..\WiSave.Framework.EventSourcing\WiSave.Framework.EventSourcing.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EventStore.Client.Grpc.PersistentSubscriptions" Version="23.3.9" />
+    <PackageReference Include="EventStore.Client.Grpc.Streams" Version="23.3.9" />
+    <PackageReference Include="MassTransit" Version="8.5.8" />
+    <PackageReference Include="MinVer" Version="7.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+</Project>

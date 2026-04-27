@@ -1,0 +1,61 @@
+name: Publish Stable NuGet Packages
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+env:
+  DOTNET_VERSION: '10.0.x'
+  PACKAGE_SOURCE: https://nuget.pkg.github.com/WiSave/index.json
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore
+        run: dotnet restore WiSave.Framework.slnx
+
+      - name: Build
+        run: dotnet build WiSave.Framework.slnx -c Release --no-restore
+
+      - name: Test
+        run: dotnet test WiSave.Framework.slnx -c Release --no-build
+
+      - name: Ensure release tag for this commit
+        id: release_tag
+        run: |
+          git fetch --tags
+          existing_tag="$(git tag --points-at HEAD 'v*' | sort -V | tail -n 1)"
+          if [ -n "$existing_tag" ]; then
+            echo "tag=$existing_tag" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          tag="v0.1.${GITHUB_RUN_NUMBER}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag "$tag"
+          git push origin "$tag"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+      - name: Pack stable packages
+        run: dotnet pack WiSave.Framework.slnx -c Release --no-build -o ./nupkg
+
+      - name: Push stable packages
+        run: dotnet nuget push ./nupkg/*.nupkg --source "${{ env.PACKAGE_SOURCE }}" --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate

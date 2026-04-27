@@ -1,0 +1,48 @@
+name: Publish Preview NuGet Packages
+
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+
+env:
+  DOTNET_VERSION: '10.0.x'
+  PACKAGE_SOURCE: https://nuget.pkg.github.com/WiSave/index.json
+
+jobs:
+  publish-preview:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore
+        run: dotnet restore WiSave.Framework.slnx
+
+      - name: Build
+        run: dotnet build WiSave.Framework.slnx -c Release --no-restore
+
+      - name: Test
+        run: dotnet test WiSave.Framework.slnx -c Release --no-build
+
+      - name: Pack preview packages
+        run: >
+          dotnet pack WiSave.Framework.slnx
+          -c Release
+          --no-build
+          -o ./nupkg
+          -p:MinVerDefaultPreReleaseIdentifiers=preview.${{ github.event.pull_request.number }}.${{ github.run_number }}
+
+      - name: Push preview packages
+        run: dotnet nuget push ./nupkg/*.nupkg --source "${{ env.PACKAGE_SOURCE }}" --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate

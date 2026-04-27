@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/WiSave.Framework.Application/WiSave.Framework.Application.csproj" />
+    <Project Path="src/WiSave.Framework.Domain/WiSave.Framework.Domain.csproj" />
+    <Project Path="src/WiSave.Framework.EventSourcing.Kurrent/WiSave.Framework.EventSourcing.Kurrent.csproj" />
+    <Project Path="src/WiSave.Framework.EventSourcing/WiSave.Framework.EventSourcing.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/WiSave.Framework.Application.Tests/WiSave.Framework.Application.Tests.csproj" />
+    <Project Path="tests/WiSave.Framework.Domain.Tests/WiSave.Framework.Domain.Tests.csproj" />
+    <Project Path="tests/WiSave.Framework.EventSourcing.Kurrent.Tests/WiSave.Framework.EventSourcing.Kurrent.Tests.csproj" />
+    <Project Path="tests/WiSave.Framework.EventSourcing.Tests/WiSave.Framework.EventSourcing.Tests.csproj" />
+  </Folder>
+</Solution>
